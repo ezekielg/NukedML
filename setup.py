@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 with open('README.md', 'r') as f:
     long_description = f.read()
@@ -13,7 +13,7 @@ setup(
     description='Hmmm, super mysterious.',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    packages=setuptools.find_packages(exclude=['tests']),
+    packages=find_packages(exclude=['tests']),
     classifiers=[
         'Operating System :: Microsoft :: Windows',
         'Programming Language :: Python',
