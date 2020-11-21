@@ -40,7 +40,7 @@ class Faker:
             config_json[c] = [True, False]
 
         dittoer = Faker(config_json=config_json, seed=seed)
-        faked_df = dittoer.fabricate()
+        faked_df = dittoer.fabricate(size=size)
 
         return faked_df[sorted(faked_df)]
 
