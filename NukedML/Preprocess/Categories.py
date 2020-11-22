@@ -1,13 +1,35 @@
 import numpy as np
 import pandas as pd
+
 from sklearn.base import BaseEstimator, TransformerMixin
+from sklearn.utils.validation import check_is_fitted
+from sklearn.exceptions import NotFittedError
+
+
+class RegexTransformer(BaseEstimator, TransformerMixin):
+    def __init__(self):
+        self.mapping_ = None
+
+    def fit(self, X, y=None, mapping=None):
+        if mapping is None:
+            self.mapping_ = {}
+        else:
+            self.mapping_ = mapping
+
+        return self
+
+    def transform(self, X):
+        if self.mapping_ is None:
+            raise NotFittedError("This RegexTransformer instance is not fitted yet.")
+
+        return X
 
 
 class UppercaseTransformer(BaseEstimator, TransformerMixin):
     def __init__(self):
         pass
 
-    def fit(self, X=None, y=None):
+    def fit(self, X, y=None):
         return self
 
     def transform(self, X):
@@ -16,14 +38,16 @@ class UppercaseTransformer(BaseEstimator, TransformerMixin):
         :param X: {array-like, dataframe} of shape (n_samples, n_features)
         :return: np.ndarray of shape (n_samples, n_feature_new)
         """
+        check_is_fitted(self)
+
         try:
             if not isinstance(X, (pd.Series, pd.DataFrame)):
-                X_out = pd.DataFrame(np.asarray(X))
+                X = pd.DataFrame(np.asarray(X))
 
             X_out = X.apply(lambda x: x.str.upper())
 
         except AttributeError as e:
-            raise TypeError("Variable 'data' must be array-like or np.ndarray")
+            raise TypeError("Variable 'data' must be array-like.")
 
         return X_out
 
@@ -32,7 +56,7 @@ class SparkjoyTransformer(BaseEstimator, TransformerMixin):
     """
     Too many things in a column? Let's throw out the things that don't spark joy.
     """
-    def __init__(self, cutoff, label):
+    def __init__(self, cutoff=10, label='OTHER'):
         """
 
         :param cutoff: Cutoff value for the value count of any individual category.
@@ -40,7 +64,7 @@ class SparkjoyTransformer(BaseEstimator, TransformerMixin):
         """
         self.cutoff = cutoff
         self.label = label
-        self._elims = {}
+        self.elims_ = None
 
     def fit(self, X, y=None):
         """
@@ -50,12 +74,13 @@ class SparkjoyTransformer(BaseEstimator, TransformerMixin):
         :param y: Ignored.
         :return: self
         """
+        self.elims_ = {}
 
         for c in sorted(X):
             truth = X[c].value_counts < self.cutoff
             cutouts = truth.index[truth].to_list()
 
-            self._elims[c] = cutouts
+            self.elims_[c] = cutouts
 
         return self
 
@@ -67,13 +92,15 @@ class SparkjoyTransformer(BaseEstimator, TransformerMixin):
         :return X_out: The transformed data.
         """
 
+        if self.elims_ is None:
+            raise NotFittedError("This SparjkoyTransformer instance is not fitted yet.")
+
+        if not isinstance(X, (pd.Series, pd.DataFrame)):
+            X = pd.DataFrame(np.asarray(X))
+
         try:
-            if not isinstance(X, (pd.Series, pd.DataFrame)):
-                X_out = pd.DataFrame(np.asarray(X))
-
             X_out = X.apply(lambda x: np.where(x.map(x.value_counts()) < self.cutoff, self.label, x))
-
         except AttributeError as e:
-            raise TypeError("Variable 'data' must be array-like or np.ndarray")
+            raise TypeError("Variable 'data' must be array-like.")
 
         return X_out
