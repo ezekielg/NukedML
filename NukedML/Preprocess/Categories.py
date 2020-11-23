@@ -36,7 +36,7 @@ class UppercaseTransformer(BaseEstimator, TransformerMixin):
         """
 
         :param X: {array-like, dataframe} of shape (n_samples, n_features)
-        :return: np.ndarray of shape (n_samples, n_feature_new)
+        :return: X_out array-like of shape (n_samples, n_feature_new)
         """
         check_is_fitted(self)
 
