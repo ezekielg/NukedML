@@ -77,7 +77,7 @@ class SparkjoyTransformer(BaseEstimator, TransformerMixin):
         self.elims_ = {}
 
         for c in sorted(X):
-            truth = X[c].value_counts < self.cutoff
+            truth = X[c].value_counts() < self.cutoff
             cutouts = truth.index[truth].to_list()
 
             self.elims_[c] = cutouts
@@ -101,6 +101,6 @@ class SparkjoyTransformer(BaseEstimator, TransformerMixin):
         try:
             X_out = X.apply(lambda x: np.where(x.map(x.value_counts()) < self.cutoff, self.label, x))
         except AttributeError as e:
-            raise TypeError("Variable 'data' must be array-like.")
+            raise TypeError("Variable 'X' must be array-like.")
 
         return X_out

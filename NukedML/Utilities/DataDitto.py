@@ -47,3 +47,7 @@ class Faker:
     @staticmethod
     def ditto_series(*args, **kwargs):
         print("Don't be silly, just use sampling.")
+
+    @staticmethod
+    def ditto_json(*args, **kwargs):
+        print("Coming soon.")

@@ -93,7 +93,7 @@ def sparkjoy_test():
 
     st = SparkjoyTransformer()
 
-    return st.transform(X=faked_df[['colors']])
+    return st.fit_transform(X=faked_df[['colors']])
 
 
 if __name__ == '__main__':
