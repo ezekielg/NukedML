@@ -2,6 +2,7 @@ import pytest
 import pandas as pd
 import datetime
 
+from sklearn.exceptions import NotFittedError
 from NukedML.Preprocess.Categories import RegexTransformer, UppercaseTransformer, SparkjoyTransformer
 
 default_json = {
@@ -20,7 +21,23 @@ for i, _ in enumerate(default_json['column_5']):
 
 class TestTransformers:
     @pytest.mark.parametrize(
-        "X", "X_out"
+        "X, X_out",
+        [({}, pd.DataFrame({}))],
+        ids=["Empty DataFrame"]
     )
-    def test_transform(self, X, X_out):
-        assert True
+    @pytest.mark.parametrize(
+        "transformer",
+        [RegexTransformer(), SparkjoyTransformer(), UppercaseTransformer()],
+        ids=["RegexTransformer", "SparkjoyTransformer", "UppercaseTransformer"]
+    )
+    def test_transform_without_fitting(self, transformer, X, X_out):
+        with pytest.raises(NotFittedError):
+            assert transformer.transform(X)
+
+    @pytest.mark.parametrize(
+        "transformer",
+        [RegexTransformer(), SparkjoyTransformer(), UppercaseTransformer()],
+        ids=["RegexTransformer", "SparkjoyTransformer", "UppercaseTransformer"]
+    )
+    def test_fit(self, transformer, X, y=None, **kwargs):
+        transformer.fit(X, y, **kwargs)
