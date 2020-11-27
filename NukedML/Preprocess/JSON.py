@@ -1,14 +1,14 @@
 import numpy as np
 import pandas as pd
-import json
 
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.exceptions import NotFittedError
 
 
 class JSONTransformer(BaseEstimator, TransformerMixin):
-    def __init__(self):
+    def __init__(self, mode='json'):
         self.mapping_ = None  # Shows the relationship between original keys and new keys.
+        self.mode_ = mode  # Output json vs. full pandas DataFrame
 
     def fit(self, X, y=None):
         self.mapping_ = {}
