@@ -40,11 +40,9 @@ def smash_json_example():
     fakey = ct.fit_transform(X=faked_df)
 
     pp.pprint(pd.DataFrame(fakey).head())
+    pp.pprint(type(fakey[0][0]))
 
 
 if __name__ == '__main__':
     smash_json_example()
 
-    testt = {"key_a": "value_a", "key_b": "value_b", "key_c": "value_c",
-             "key_surprise": {"key_x1": [99, 98, 97], "key_x2": {"a": 1, "b": 2}}
-             }

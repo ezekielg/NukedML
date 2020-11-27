@@ -4,6 +4,7 @@ import pprint as pp
 
 from NukedML.Utilities.DataDitto import Faker
 
+
 def test_faker_class():
     df_json = {
         'column_1': ['Apple', 'ApPlE', 'banana', 'BANANA', 'Banana', 'Orange', 'Apple', 'APPLE', 'Cherry', 'Cherry'],
