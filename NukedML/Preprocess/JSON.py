@@ -35,37 +35,32 @@ class JSONTransformer(BaseEstimator, TransformerMixin):
     def smash_json(json_in) -> dict:
         json_out = {}
 
-        if not isinstance(json_in, dict):
-            if isinstance(json_in, str):
-                json_in = json.loads(json_in)
-            else:
-                raise TypeError("Variable json_in must be a dict or str.")
+        if isinstance(json_in, dict):
+            for k in json_in.keys():
+                if isinstance(json_in[k], (bool, int, float, str)):
+                    json_out[k] = json_in[k]
 
-        for k in json_in.keys():
-            if isinstance(json_in[k], (bool, int, float, str)):
-                json_out[k] = json_in[k]
+                elif isinstance(json_in[k], (list, dict)):
+                    f = JSONTransformer.smash_json(json_in[k])
 
-            elif isinstance(json_in[k], dict):
-                f = JSONTransformer.smash_json(json_in[k])
+                    for fkey, fval in f.items():
+                        json_out['{0}_{1}'.format(k, fkey)] = fval
 
-                for fkey, fval in f.items():
-                    json_out['{0}_{1}'.format(k, fkey)] = fval
+                else:
+                    print("Nada.")
 
-            elif isinstance(json_in[k], list):
-                for i, v in enumerate(json_in[k]):
-                    if isinstance(v, dict):
-                        f = JSONTransformer.smash_json(v)
+        elif isinstance(json_in, list):
+            for i, v in enumerate(json_in):
+                if isinstance(v, (bool, int, float, str)):
+                    json_out['{0}'.format(i)] = v
 
-                        for fkey, fval in f.items():
-                            json_out['{0}_{1}_{2}'.format(k, i, fkey)] = fval
+                elif isinstance(v, (list, dict)):
+                    f = JSONTransformer.smash_json(v)
 
-                    elif isinstance(v, (bool, int, float, str)):
-                        json_out['{0}_{1}'.format(k, i)] = v
+                    for fkey, fval in f.items():
+                        json_out['{0}_{1}'.format(i, fkey)] = fval
 
-                    elif isinstance(v, list):
-                        print("Not sure how to handle lists yet, to be honest.")
-
-            else:
-                print("Nada.")
+                else:
+                    print("Nada.")
 
         return json_out
