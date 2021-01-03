@@ -1,11 +1,11 @@
 import datetime
 import pprint as pp
+
 import pandas as pd
-
-from NukedML.Utilities.DataDitto import Faker
-from NukedML.Preprocess.JSON import JSONTransformer
-
 from sklearn.compose import ColumnTransformer
+
+from NukedML.Preprocess.JSON import JSONTransformer
+from NukedML.Utilities.DataDitto import Faker
 
 
 def smash_json_example():

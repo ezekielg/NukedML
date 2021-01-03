@@ -1,6 +1,7 @@
-import pytest
-import pandas as pd
 import datetime
+
+import pandas as pd
+import pytest
 
 from NukedML.Utilities.DataDitto import Faker
 

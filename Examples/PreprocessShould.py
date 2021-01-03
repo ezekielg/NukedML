@@ -1,13 +1,12 @@
 import datetime
-import numpy as np
-import pandas as pd
 import pprint as pp
 
-from NukedML.Utilities.DataDitto import Faker
+import numpy as np
+from sklearn.compose import ColumnTransformer
+
 from NukedML.Preprocess.Categories import UppercaseTransformer, SparkjoyTransformer
 from NukedML.Preprocess.JSON import JSONTransformer
-
-from sklearn.compose import ColumnTransformer
+from NukedML.Utilities.DataDitto import Faker
 
 
 def test_preprocess():

@@ -1,8 +1,9 @@
-import pytest
-import pandas as pd
 import datetime
 
+import pandas as pd
+import pytest
 from sklearn.exceptions import NotFittedError
+
 from NukedML.Preprocess.Categories import RegexTransformer, UppercaseTransformer, SparkjoyTransformer
 
 default_json = {
